@@ -1,0 +1,32 @@
+FROM node:13-alpine
+
+EXPOSE 3000
+
+RUN apk update
+RUN apk upgrade
+RUN apk add \
+    nodejs npm \
+    git \
+    make \
+    python3 \
+    g++ \
+    gcc \
+    libc-dev \
+    clang
+
+RUN npm install -g npm
+
+}RUN adduser --system app --home /app
+USER app
+WORKDIR /app
+
+RUN git clone https://github.com/timeoff-management/application.git timeoff-management
+
+WORKDIR /app/timeoff-management
+
+RUN sed -i 's/formidable"\: "~1.0.17/formidable"\: "1.1.1/' package.json
+
+#install app
+RUN npm install -y
+
+CMD npm start
